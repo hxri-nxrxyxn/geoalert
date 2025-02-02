@@ -6,9 +6,13 @@
 
 <main>
     <Router>
-        <Route to="/" component={Home} />
-        <Route to="/stats" component={Stats} />
+        <Route path="/" component={Home} />
+        <Route path="/stats" component={Stats} />
     </Router>
 </main>
 
-<style></style>
+<style>
+    main {
+        padding: 2rem;
+    }
+</style>
