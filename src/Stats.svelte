@@ -3,67 +3,21 @@
     import Nav from "./Nav.svelte";
     import HomeIcon from "./assets/house-chimney.svg";
     import Sensor from "./assets/sensor-on.svg";
-    import * as Paho from "paho-mqtt";
 
-    // Create a client instance: Broker, Port, Websocket Path, Client ID
-    let client = new Paho.MQTT.Client(
-        "broker.hivemq.com",
-        Number(80),
-        "/geo_alert/sensors",
-        "clientId_AIPH0X0qFf",
-    );
+    import mqtt from "mqtt";
+    const client = mqtt.connect("mqtt://test.mosquitto.org:8080");
 
-    let accelerometerX = 0.0;
-    let accelerometerY = 0.0;
-    let accelerometerZ = 0.0;
-    let pressure = 0.0;
-    let relativePressure = 0.0;
-    let altitude = 0.0;
-
-    client.onConnectionLost = function (responseObject) {
-        console.log("Connection Lost: " + responseObject.errorMessage);
-    };
-
-    console.log("hey");
-
-    client.onMessageArrived = function (message) {
-        console.log("Message Arrived: " + message.payloadString);
-
-        try {
-            // Attempt to parse the message as JSON.  Adjust this to your actual message format.
-            const payload = JSON.parse(message.payloadString);
-
-            // Example assuming your JSON payload looks like this:
-            // { "accelerometer": { "x": 0.5, "y": -0.2, "z": 0.8 }, "pressure": 1013.2, ... }
-
-            if (payload.accelerometer) {
-                accelerometerX = payload.accelerometer.x;
-                accelerometerY = payload.accelerometer.y;
-                accelerometerZ = payload.accelerometer.z;
+    client.on("connect", () => {
+        console.log("Connected to MQTT broker");
+        client.subscribe("geo_alert/sensors", (err) => {
+            if (!err) {
+                console.log("Subscribed to geo_alert/sensors");
             }
-            if (payload.pressure) {
-                pressure = payload.pressure;
-            }
-            if (payload.relativePressure) {
-                relativePressure = payload.relativePressure;
-            }
-            if (payload.altitude) {
-                altitude = payload.altitude;
-            }
-        } catch (error) {
-            console.error("Error parsing JSON:", error);
-            // Handle the error appropriately, e.g., display an error message.
-        }
-    };
+        });
+    });
 
-    function onConnect() {
-        console.log("Connected");
-        // Subscribe to the topic after connecting
-        client.subscribe("/geo_alert/sensors"); // Or the specific topic you need
-    }
-
-    client.connect({
-        onSuccess: onConnect,
+    client.on("message", (topic, message) => {
+        console.log(message.toString());
     });
 </script>
 
