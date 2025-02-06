@@ -1,47 +1,48 @@
-# Svelte + Vite
+GeoAlert 🌍⚡
+Real-time location-based alert system using ESP32, MQTT, and a Svelte-powered app.
 
-This template should help get you started developing with Svelte in Vite.
+Overview
+GeoAlert is a smart alert system that combines ESP32 sensor data collection with an MQTT-based communication network. The project consists of:
 
-## Recommended IDE Setup
+A Svelte + Vite frontend for the user interface.
+An ESP32 module for collecting sensor data.
+MQTT communication to relay sensor data to the app in real time.
+Project Structure
+1. Svelte + Vite App
+The front-end interface is built using Svelte with Vite, providing a fast and reactive user experience.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+2. ESP32 Sensor Data & MQTT Communication
+The ESP32 module:
+✅ Collects sensor data (e.g., temperature, motion, GPS, etc.).
+✅ Uses MQTT protocol to publish data to the cloud/server.
+✅ Integrates with the Svelte frontend to display real-time updates.
 
-## Need an official Svelte framework?
+Recommended IDE Setup
+Arduino IDE and VS Code + Svelte.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+Installation & Setup
+For the Svelte App
+Clone the repository:
 
-## Technical considerations
+git clone https://github.com/<repo-owner>/GeoAlert.git
+cd GeoAlert
+Install dependencies:
+npm install
 
-**Why use this over SvelteKit?**
+Start the development server:
+npm run dev
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+For the ESP32 Module
+Install the required Arduino libraries:
+PubSubClient (for MQTT)
+WiFiClient (for internet connectivity)
+Flash the ESP32 with the provided firmware (esp32/geoalert.ino).
+Configure your MQTT broker (e.g., Mosquitto or AWS IoT).
+Why This Approach?
+🚀 Fast & Reactive UI - Thanks to Svelte and Vite.
+📡 Real-time Communication - Using MQTT for instant data transfer.
+🔧 ESP32 Integration - Making it IoT-ready.
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+Contributors
+ShahazadAbdulla - ESP32 & MQTT integration.
+HariNarayanan - Svelte + Vite app development.
