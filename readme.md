@@ -23,9 +23,9 @@ Arduino IDE and VS Code + Svelte.
 Installation & Setup
 For the Svelte App
 Clone the repository:
-
 git clone https://github.com/<repo-owner>/GeoAlert.git
 cd GeoAlert
+
 Install dependencies:
 npm install
 
@@ -38,6 +38,7 @@ PubSubClient (for MQTT)
 WiFiClient (for internet connectivity)
 Flash the ESP32 with the provided firmware (esp32/geoalert.ino).
 Configure your MQTT broker (e.g., Mosquitto or AWS IoT).
+
 Why This Approach?
 🚀 Fast & Reactive UI - Thanks to Svelte and Vite.
 📡 Real-time Communication - Using MQTT for instant data transfer.
