@@ -3,34 +3,48 @@
     import HomeIcon from "./assets/house-chimney.svg";
     import Sensor from "./assets/sensor-on.svg";
     import { Link } from "svelte-routing";
+    import { initializeApp } from "firebase/app";
+    import { getDatabase, ref, onValue } from "firebase/database";
 
+    // State variables using Svelte 5's $state
     let vibration = "NO";
     let state = $state("safe");
 
-    import mqtt from "mqtt";
-    const client = mqtt.connect("mqtt://test.mosquitto.org:8080");
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCLbiKPaJ36j--ZGGa0kgqIdt-TZfpFIdI",
+        authDomain: "loraalert-72e69.firebaseapp.com",
+        databaseURL:
+            "https://loraalert-72e69-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "loraalert-72e69",
+        storageBucket: "loraalert-72e69.firebasestorage.app",
+        messagingSenderId: "194512426008",
+        appId: "1:194512426008:web:29571e0afcbaf8c5a91f6d",
+        measurementId: "G-VYWDN4MEF1",
+    };
 
-    client.on("connect", () => {
-        console.log("Connected to MQTT broker");
-        client.subscribe("geo_alert/sensors", (err) => {
-            if (!err) {
-                console.log("Subscribed to geo_alert/sensors");
-            }
-        });
-    });
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-    client.on("message", (topic, message) => {
+    // Reference to the sensors data
+    const sensorsRef = ref(database, "geo_alert/sensors");
+
+    // Listen for changes in the sensors data
+    onValue(sensorsRef, (snapshot) => {
         try {
-            const data = JSON.parse(message.toString());
-            vibration = data.vibration || "NO";
-            if (vibration == "YES") {
-                state = "unsafe";
-                document.querySelector(".status__text").style.borderColor =
-                    "#d63031";
+            const data = snapshot.val();
+            if (data) {
+                console.log(data);
+                vibration = data.vibration || "NO";
+                if (vibration === "YES") {
+                    state = "unsafe";
+                    document.querySelector(".status__text").style.borderColor =
+                        "#d63031";
+                }
             }
         } catch (error) {
-            console.error("Error parsing JSON:", error);
-            console.error("Raw message:", message.toString());
+            console.error("Error reading data:", error);
         }
     });
 </script>
@@ -43,7 +57,7 @@
         </div>
     </div>
     <p>
-        {state == "unsafe" ? `` : `No`} Landslide has been <b>reported</b>
+        {state === "unsafe" ? `` : `No`} Landslide has been <b>reported</b>
     </p>
 </main>
 <div class="foot">

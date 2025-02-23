@@ -3,38 +3,49 @@
     import Nav from "./Nav.svelte";
     import HomeIcon from "./assets/house-chimney.svg";
     import Sensor from "./assets/sensor-on.svg";
+    import { initializeApp } from "firebase/app";
+    import { getDatabase, ref, onValue } from "firebase/database";
 
+    const firebaseConfig = {
+        apiKey: "AIzaSyCLbiKPaJ36j--ZGGa0kgqIdt-TZfpFIdI",
+        authDomain: "loraalert-72e69.firebaseapp.com",
+        databaseURL:
+            "https://loraalert-72e69-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "loraalert-72e69",
+        storageBucket: "loraalert-72e69.firebasestorage.app",
+        messagingSenderId: "194512426008",
+        appId: "1:194512426008:web:29571e0afcbaf8c5a91f6d",
+        measurementId: "G-VYWDN4MEF1",
+    };
+
+    // Initialize state variables
     let accelerometerX = 0;
     let accelerometerY = 0;
     let accelerometerZ = 0;
     let pressure = 0;
-    let altitude = 0; // No relative pressure in this data
+    let altitude = 0;
 
-    import mqtt from "mqtt";
-    const client = mqtt.connect("mqtt://test.mosquitto.org:8080");
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-    client.on("connect", () => {
-        console.log("Connected to MQTT broker");
-        client.subscribe("geo_alert/sensors", (err) => {
-            if (!err) {
-                console.log("Subscribed to geo_alert/sensors");
-            }
-        });
-    });
+    // Reference to the sensors data
+    const sensorsRef = ref(database, "geo_alert/sensors");
 
-    client.on("message", (topic, message) => {
+    // Listen for changes in the sensors data
+    onValue(sensorsRef, (snapshot) => {
         try {
-            const data = JSON.parse(message.toString());
-            console.log("Received data:", data);
-
-            accelerometerX = data.accel_x || 0; // Use accel_x, accel_y, accel_z
-            accelerometerY = data.accel_y || 0;
-            accelerometerZ = data.accel_z || 0;
-            pressure = data.pressure || 0;
-            altitude = data.altitude || 0; // Get altitude
+            const data = snapshot.val();
+            if (data) {
+                console.log("Received data:", data);
+                accelerometerX = data.accel_x || 0;
+                accelerometerY = data.accel_y || 0;
+                accelerometerZ = data.accel_z || 0;
+                pressure = data.pressure || 0;
+                altitude = data.altitude || 0;
+            }
         } catch (error) {
-            console.error("Error parsing JSON:", error);
-            console.error("Raw message:", message.toString());
+            console.error("Error reading data:", error);
         }
     });
 </script>
