@@ -61,4 +61,4 @@ This project is licensed under the MIT License. 📝
 
 ## 📧 Contact
 
-For any questions or inquiries, please contact [hari@laddu.cc]. 📬
+For any questions or inquiries, please contact [me](hari@laddu.cc). 📬
