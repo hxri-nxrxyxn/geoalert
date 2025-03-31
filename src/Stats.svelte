@@ -24,6 +24,7 @@
     let accelerometerZ = 0;
     let pressure = 0;
     let altitude = 0;
+    let moisture = 0;
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
@@ -43,6 +44,7 @@
                 accelerometerZ = data.accel_z || 0;
                 pressure = data.pressure || 0;
                 altitude = data.altitude || 0;
+                moisture = data.moisture || 0;
             }
         } catch (error) {
             console.error("Error reading data:", error);
@@ -80,6 +82,15 @@
             </div>
         </div>
         <div class="stat">
+                    <div class="stat__title">
+                        <h1>Moisture <span>g / m<sup>3</sup></span></h1>
+                    </div>
+                    <div class="stat__tiles">
+                        <div class="stat__tile">
+                            <h3>{moisture.toFixed(2)}</h3>
+                        </div>
+                    </div>
+                </div><div class="stat">
             <div class="stat__title">
                 <h1>Altitude <span>m</span></h1>
             </div>

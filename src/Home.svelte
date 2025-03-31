@@ -41,6 +41,10 @@
                     state = "unsafe";
                     document.querySelector(".status__text").style.borderColor =
                         "#d63031";
+                } else {
+                  state = "safe";
+                  document.querySelector(".status__text").style.borderColor =
+                      "#00b894";
                 }
             }
         } catch (error) {
